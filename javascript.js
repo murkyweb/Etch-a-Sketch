@@ -1,19 +1,21 @@
 const container = document.querySelector('.container');
-const button = document.querySelector('button');
-let gridSize = 16;
+const colorPicker = document.querySelector('.color-picker');
+const clearButton = document.querySelector('.clear');
+const colorButton = document.querySelector('.same-color');
+const rainbowButton = document.querySelector('.rainbow');
+const sizePicker = document.querySelector('.size-picker');
+const sizeDisplay = document.querySelector('.size-display');
 
 function createGrid (gridSize) {
-    gridSize = prompt('Enter a number: (MAX 35)', 16);
-    if (gridSize > 35) {
-        alert('Number must be 35 or lower!');
-        return;
-    } 
+    gridSize = sizePicker.value;
+    height = (container.offsetHeight - 2) / gridSize;
+    width = height;
     for (let i = 0; i < gridSize; i++) {
         for (let j = 0; j < gridSize; j++) {
             const div = document.createElement('div');
             div.setAttribute(
-                'style', `height: ${container.offsetHeight / gridSize}px;
-                width: ${container.offsetHeight / gridSize}px`
+                'style', `height: ${height}px;
+                width: ${width}px`
                 );
             div.classList.add('box');
             container.appendChild(div);
@@ -27,16 +29,44 @@ function colorGrid () {
 
     divs.forEach((div) => {
         div.addEventListener('mouseenter', () => {
-            div.classList.add('color');
+            div.style.backgroundColor = `${colorPicker.value}`;
         });
     });
 }
 
-createGrid();
+function rainbowGrid () {
+    const divs = document.querySelectorAll('.box');
 
-button.addEventListener('click', () => {
+    divs.forEach((div) => {
+        div.addEventListener('mouseenter', () => {
+            div.style.backgroundColor = `rgb(
+                ${Math.floor(Math.random() * 256)},
+                ${Math.floor(Math.random() * 256)},
+                ${Math.floor(Math.random() * 256)})`;
+        });
+    });
+}
+
+function clearGrid() {
+    const divs = document.querySelectorAll('.box');
+    
+    divs.forEach((div) => {
+        div.style.backgroundColor = 'rgb(255,255,255)';
+    });
+}
+
+createGrid();
+sizeDisplay.textContent = `${sizePicker.value} x ${sizePicker.value}`;
+
+clearButton.addEventListener('click', clearGrid);
+colorButton.addEventListener('click', colorGrid);
+rainbowButton.addEventListener('click', rainbowGrid);
+sizePicker.addEventListener('input', () => {
+    gridSize = sizePicker.value;
+    sizeDisplay.textContent = `${gridSize} x ${gridSize}`;
     while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
     createGrid();
 });
+

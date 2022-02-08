@@ -55,6 +55,8 @@ function clearGrid() {
     });
 }
 
+
+
 createGrid();
 sizeDisplay.textContent = `${sizePicker.value} x ${sizePicker.value}`;
 
